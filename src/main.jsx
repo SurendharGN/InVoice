@@ -11,7 +11,7 @@ import {Token}from "./Components/Token.jsx";
 const router = createBrowserRouter([
     {path:"/",
 element: <App/>},{
-    path:"/token",
+    path:"generate-invoices.vercel.app/token",
     element:<Token/>
 }
 ])
