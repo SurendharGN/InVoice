@@ -1,11 +1,18 @@
 import {useFormik} from "formik";
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
 import Item from "../Components/Item";
 
 import {useState} from 'react';
+import {useRef} from 'react';
+
+import {useReactToPrint} from "react-to-print";
+
 
 export const Token=()=>{
+  
   const [date,setDate]=useState(new Date());
   const [dueDate,setDueDate] = useState(new Date());
   const [val,setVal]=useState([]);
@@ -30,7 +37,7 @@ export const Token=()=>{
       termsConditions:"",
     },
     onSubmit:values=>{
-      console.log(JSON.stringify(values));
+      alert(JSON.stringify(values));
     }
   });
 
@@ -41,9 +48,9 @@ export const Token=()=>{
 
   };
 
-  // const handleChange = () => {
+  const handleChange = () => {
 
-  // };
+  };
   
   const handleDelete = (item) => {
     const xyz=[...val];
@@ -53,19 +60,29 @@ export const Token=()=>{
 
   };
 
+  var element = document.getElementById("main");
   
   
   
-
   
+  
+    const componentRef=useRef();
+    const handlePrint = useReactToPrint({content: () => componentRef.current})
     return(
-        <>
-        
-            <header>
+
+      <div ref={componentRef}>
+                      <html >
+          <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+	integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+	crossOrigin="anonymous"
+	
+></script>
+              <header>
                 <h1>InVoice</h1>
             </header>
             
-            <main>
+            <main id="main">
                 <form onSubmit={formik.handleSubmit}>
                     <section id="metadata"  className=" items-start font-arial flex flex-col">
                     <div className="">
@@ -159,7 +176,7 @@ export const Token=()=>{
                         {val.map((i)=>{
                           return(
                             <div key={i} className="flex">
-                              <Item/>
+                              <Item ref={componentRef}/>
                               <button onClick={()=>handleDelete(i)}>Delete</button>
                             </div>
                           )
@@ -180,6 +197,17 @@ export const Token=()=>{
             <footer>
 
             </footer>
-        </>
+            {console.log("element:",element) 
+            }
+            
+        </html>
+        
+        <button onClick={handlePrint}>print</button>
+
+      </div>
+//             <ReactToPrint trigger={()=><button>Print</button>} content={()=>componentRef.current}>
+
+//             </ReactToPrint>
+            
     )
 }
