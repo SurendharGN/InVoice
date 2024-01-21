@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily:{
-        arial:["Arial"],
+        'sans': 'inter'
       }
     },
   },

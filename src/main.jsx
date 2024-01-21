@@ -7,13 +7,19 @@ import {
     RouterProvider,
 
 } from "react-router-dom";
-import {Token}from "./Components/Token.jsx";
+
+import {Token} from "./Components/Token.jsx";
+import Preview from "./Components/Preview.jsx"
+
+
 const router = createBrowserRouter([
     {path:"/",
 element: <App/>},{
     path:"/token",
     element:<Token/>
-}
+},
+{path:'/preview',
+element:<Preview/>}
 ])
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

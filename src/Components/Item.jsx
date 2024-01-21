@@ -3,9 +3,10 @@ import React from 'react';
 const Item = () => {
   return (
     <div className='flex gap-4'>
-      <input placeholder="description" type="text" />
-      <input placeholder="qty" type="text" />
-      <input placeholder="price" type="text" />
+      <input type="text" className='border rounded-sm' />
+      <input type="number" className='border rounded-sm' />
+      <input type='number' className='border rounded-sm'/>
+      <p id="amountPerItem">0.00</p>
       
     </div>
   )

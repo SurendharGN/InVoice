@@ -1,7 +1,10 @@
 import {useFormik} from "formik";
 
-import DatePicker from "react-datepicker";
+import { Link } from "react-router-dom";
+
+
 import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
 
 import Item from "../Components/Item";
 
@@ -9,6 +12,7 @@ import {useState} from 'react';
 import {useRef} from 'react';
 
 import {useReactToPrint} from "react-to-print";
+import Preview from "./Preview";
 
 
 export const Token=()=>{
@@ -16,6 +20,9 @@ export const Token=()=>{
   const [date,setDate]=useState(new Date());
   const [dueDate,setDueDate] = useState(new Date());
   const [val,setVal]=useState([]);
+  const [showInvoice,setShowInvoice]=useState(true);
+
+
   
 
   const formik = useFormik({
@@ -30,25 +37,18 @@ export const Token=()=>{
       accNo:0,
       clientName:"",
       clientNo:0,
-      clientAddress:"",
       orgName:"",
       orgNo:0,
       orgAddress:"",
       termsConditions:"",
     },
-    onSubmit:values=>{
-      alert(JSON.stringify(values));
-    }
+    
   });
 
   const handleAdd = () => {
     const abc=[...val,1];
     console.log(val)
     setVal(abc)
-
-  };
-
-  const handleChange = () => {
 
   };
   
@@ -61,17 +61,12 @@ export const Token=()=>{
   };
 
   var element = document.getElementById("main");
-  
-  
-  
-  
-  
     const componentRef=useRef();
     const handlePrint = useReactToPrint({content: () => componentRef.current})
     return(
-
-      <div ref={componentRef}>
-                      <html >
+      <div>
+        {showInvoice?(<div ref={componentRef}>
+          <html >
           <script
             src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
 	integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
@@ -80,41 +75,45 @@ export const Token=()=>{
 ></script>
               <header>
                 <h1>InVoice</h1>
+                {console.log(JSON.stringify(dueDate))}
             </header>
             
             <main id="main">
                 <form onSubmit={formik.handleSubmit}>
                     <section id="metadata"  className=" items-start font-arial flex flex-col">
                     <div className="">
-{/* ********************************************** */}
-                        <h2>Metadata:</h2>
+{/* Metadata */}
+                        <h2 className="font-bold font-sans text-lg">Metadata:</h2>
 
                         <div className="flex">
                           <label htmlFor="invoiceNo" className="metadata">Invoice no.:</label>
-                          <input type="text" id="invoiceNo" name="invoiceNo" onChange={formik.handleChange} value={formik.values.invoiceNo} />
+                          <input className='border rounded-sm' type="number" id="invoiceNo" name="invoiceNo" onChange={formik.handleChange} value={formik.values.invoiceNo} />
                         </div>
 
                         <div className="flex">
                           <label htmlFor="date" className="metadata">Date:</label>
-                          <DatePicker type="text" id="date" name="date" selected={date} onChange={(date)=>setDate(date)} value={formik.values.date}/>
+                          <DatePicker type="text" id="date" name="date" selected={date} onChange={(date)=>setDate(JSON.stringify(date))} value={formik.values.date}/>
                         </div>
+
+                        {console.log("date:",date)}
 
                         <div className="flex">
                           <label htmlFor="dueDate" className="metadata">Date:</label>
-                          <DatePicker type="text" id="dueDate" name="dueDate"  onChange={(dueDate)=>setDueDate(dueDate)} selected={dueDate} value={formik.values.dueDate} />
+                          <DatePicker type="text" id="dueDate" name="dueDate"  onChange={(dueDate)=>setDueDate(JSON.stringify(dueDate))} selected={dueDate} value={dueDate} />
                         </div>
+                        {console.log("duedate:",dueDate)}
 
                         <div className="flex">
                           <label htmlFor="tax" className="metadata">Tax rate:</label>
-                          <input type="text" id="tax" name="tax" onChange={formik.handleChange} value={formik.values.tax} />
+                          <input type='number' placeholder="0%" id="tax" name="tax" onChange={formik.handleChange} value={formik.values.tax} />
                         </div>
 
                         <div className="flex">
                           <label htmlFor="discount" className="metadata">Discount rate:</label>
-                          <input type="text" id="discount" name="discount" onChange={formik.handleChange} value={formik.values.discount} />
+                          <input type='number' placeholder="0%" id="discount" name="discount" onChange={formik.handleChange} value={formik.values.discount} />
                         </div>
-{/* ********************************************** */}
-                        <h2>Payment information:</h2>
+{/* Payment information */}
+                        <h2 className="font-bold  text-lg">Payment information:</h2>
 
                         <div className="flex">
                           <label htmlFor="bankName" className="metadata">Bank name:</label>
@@ -127,11 +126,11 @@ export const Token=()=>{
                         </div>
 
                         <div className="flex">
-                          <label htmlFor="accNo" className="metadata">Account No.:</label>
+                          <label htmlFor="accNo" className="metadata">Account Number:</label>
                           <input type="text" id="accNo" name="accNo" onChange={formik.handleChange} value={formik.values.accNo} />
                         </div>
-{/* ********************************************** */}
-                        <h2>Client details:</h2>
+{/* Client details */}
+                        <h2 className="font-bold  text-lg">Client details:</h2>
 
                         <div className="flex">
                           <label htmlFor="clientName" className="metadata"> Name:</label>
@@ -140,16 +139,13 @@ export const Token=()=>{
                         </div>
 
                         <div className="flex">
-                          <label htmlFor="clientAddress" className="metadata">Contact no.:</label>
+                          <label htmlFor="clientAddress" className="metadata">Contact number:</label>
                           <input type="text" id="clientAddress" name="clientAddress" onChange={formik.handleChange} value={formik.values.clientAddress} />
                         </div>
 
-                        <div className="flex">
-                          <label htmlFor="clientNo" className="metadata">Address:</label>
-                          <input type="text" id="clientNo" name="clientNo" onChange={formik.handleChange} value={formik.values.clientNo} />
-                        </div>
-{/* ********************************************** */}
-                        <h2>Organisation details:</h2>
+                        
+{/* Organization details */}
+                        <h2 className="font-bold  text-lg">Organisation details:</h2>
 
                         <div className="flex">
                           <label htmlFor="orgName" className="metadata"> Name:</label>
@@ -157,7 +153,7 @@ export const Token=()=>{
                         </div>
 
                         <div className="flex">
-                          <label htmlFor="orgAddress" className="metadata">Contact no.:</label>
+                          <label htmlFor="orgAddress" className="metadata">Contact number:</label>
                           <input type="text" id="orgAddress" name="orgAddress" onChange={formik.handleChange} value={formik.values.orgAddress} />
                         </div>
 
@@ -165,49 +161,70 @@ export const Token=()=>{
                           <label htmlFor="orgNo" className="metadata">Address:</label>
                           <input type="text" id="orgNo" name="orgNo" onChange={formik.handleChange} value={formik.values.orgNo} />
                         </div>
-{/* ********************************************** */}
-                        <h2>Terms & Conditions:</h2>
+{/* Terms and conditions */}
+                        <h2 className="font-bold  text-lg">Terms & Conditions:</h2>
 
                         <div className="flex">
                           <label htmlFor="termsConditions" className="termsConditions"></label>
                           <input type="text" id="termsConditions" name="termsConditions" onChange={formik.handleChange} value={formik.values.termsConditions} />
                         </div>
 
-                        {val.map((i)=>{
+                        <div className='flex gap-40'>
+                          <p>Description</p>
+                          <p>Quantity</p>
+                          <p>Rate</p>
+                          <p >Amount</p>
+                        </div>
+
+                        {val.map((k,i)=>{
                           return(
-                            <div key={i} className="flex">
+                            <div key={i} className="flex my-6 h-10">
+                              <div>{i}</div>
                               <Item ref={componentRef}/>
-                              <button onClick={()=>handleDelete(i)}>Delete</button>
+                              <button className="mx-16" onClick={()=>handleDelete(i)}>Delete</button>
                             </div>
                           )
                         })}
 
                         <button type="button" id="addItem" onClick={()=>handleAdd()}>add</button>
                     </div>
-{/* ********************************************** */}
+{/* Preview */}
                     <div id="submit">
-                      <button type='submit'>Submit</button>
+                      <button onClick={()=>{setShowInvoice(false)}}>Preview</button>
                     </div>
 
                 </section>
                 </form>
                 
             </main>
-
             <footer>
 
             </footer>
-            {console.log("element:",element) 
-            }
             
         </html>
         
         <button onClick={handlePrint}>print</button>
-
+        </div>):(<div className="">
+          <button onClick={()=>{setShowInvoice(true)}}>Edit</button>
+  <Preview
+      invoiceNo={formik.values.invoiceNo}
+      tax={formik.values.tax}
+      discount={formik.values.discount}
+      bankName={formik.values.bankName}
+      accName={formik.values.accName}
+      accNo={formik.values.accNo}
+      clientName={formik.values.clientName}
+      clientNo={formik.values.clientNo}
+      orgName={formik.values.orgName}
+      orgNo={formik.values.orgNo}
+      orgAddress={formik.values.orgAddress}
+      termsConditions={formik.values.termsConditions} 
+      />
+</div>)}
       </div>
-//             <ReactToPrint trigger={()=><button>Print</button>} content={()=>componentRef.current}>
+      
+        
 
-//             </ReactToPrint>
-            
+      
     )
 }
